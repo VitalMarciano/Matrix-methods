@@ -14,6 +14,7 @@ def gaussian_elimination(m):
     Gaussian elimination of the input matrix.
     
     """
+    
     row, col = 0, 0
     n = m.shape[0]
     res = np.copy(m) 
@@ -47,8 +48,11 @@ def inverse_matrix(m):
    Inverse of the input matrix.
    
    """
-   
+    #if rank(m)< n if and only if det(m)=0
+    # rank(m)=n if and only if m^-1 exist
+    
 def determinant(m):
+    
     """
     Function to calculate the determinant of a matrix.
 
@@ -59,6 +63,9 @@ def determinant(m):
     Determinant of the input matrix.
     """
     
+    
+
+
 def rank(m):
     """
     Function to calculate the rank of a matrix.
@@ -69,4 +76,25 @@ def rank(m):
     Returns:
     Rank of the input matrix.
     """# -*- coding: utf-8 -*-
+
+
+    #canonial_ranked=gaussian_elimination(m)
+    rank_m=0
+    n=m.shape[0]
+    for row in range(n):
+        #scanning the diagnale and up only 
+        for col in range(row, n):
+            #change to canonial
+            #if canonial_ranked[row][col]!=0:
+            if m[row][col]!=0:
+                rank_m +=1
+                break
+            
+                
+    return rank_m
+
+m=np.array([[1,2,3],[0,1,1],[0,0,0]])
+
+print(rank(m))
+
 
