@@ -14,25 +14,57 @@ def gaussian_elimination(m):
     Gaussian elimination of the input matrix.
     
     """
-    
     row, col = 0, 0
     n = m.shape[0]
-    res = np.copy(m) 
+    res = np.copy(m).astype(float)
+    flag=-1
+    scalar=1.0
+    inverted= np.identity(n)
     while row < n and col < n:
-        pivot_row = row
-        if pivot_row:
+        pivot_row = find_pivot_row(res, row, col)
+        if pivot_row!=None:
+            
+            flag *=-1
             # swap the rows
+            inverted[row], inverted[pivot_row] = inverted[pivot_row], inverted[row]
             res[row], res[pivot_row] = res[pivot_row], res[row]
+            
             # divide the rows elements with the first nonzero element 
+            scalar /=res[row][col]
+            inverted[row] /= inverted[row][col]
             res[row] /= res[row][col]
+            
+            
             # Reset all other elements in the current column
             for r in range(n):
                 if r!= pivot_row:
                     factor = res[r, col]
+                    inverted[r] -= factor * inverted[pivot_row]
                     res[r] -= factor * res[pivot_row]
+                    
             row+=1
         col+=1
-    return res    
+      
+       
+    return (res,scalar,flag,inverted)    
+    
+def find_pivot_row(matrix, start_row, col):
+    """
+    Function to find the pivot row in a given column of the matrix.
+
+    Parameters:
+    matrix (numpy.ndarray): Input matrix of shape (m, n).
+    start_row (int): Starting row index for search.
+    col (int): Column index for pivot search.
+
+    Returns:
+    int: Index of the pivot row, or None if no pivot is found.
+    """
+    num_rows = matrix.shape[0]
+    for row in range(start_row, num_rows):
+        if matrix[row, col] != 0:
+            return row
+    return None 
     
     
 
@@ -48,10 +80,11 @@ def inverse_matrix(m):
    Inverse of the input matrix.
    
    """
+
     #if rank(m)< n if and only if det(m)=0
     # rank(m)=n if and only if m^-1 exist
     
-def determinant(m):
+def determinant(m,scalar,flag):
     
     """
     Function to calculate the determinant of a matrix.
@@ -62,8 +95,20 @@ def determinant(m):
     Returns:
     Determinant of the input matrix.
     """
-    
-    
+
+    n=m.shape[0]
+    det=1
+    for i in range(n):
+        det *= m[i][i]
+        if det==0:
+            return det
+    if det!=0:
+        det*=flag
+        det/=scalar
+        #add the multiplcity of the scalar from the gaus elimination if needed 
+        pass 
+    return det 
+        
 
 
 def rank(m):
@@ -77,8 +122,7 @@ def rank(m):
     Rank of the input matrix.
     """# -*- coding: utf-8 -*-
 
-
-    #canonial_ranked=gaussian_elimination(m)
+   
     rank_m=0
     n=m.shape[0]
     for row in range(n):
@@ -89,12 +133,45 @@ def rank(m):
             if m[row][col]!=0:
                 rank_m +=1
                 break
-            
                 
     return rank_m
 
-m=np.array([[1,2,3],[0,1,1],[0,0,0]])
 
-print(rank(m))
 
+def matrix_method(m):
+    
+    echelon_form,scalar,flag,inver=gaussian_elimination(m)
+    det=determinant(echelon_form, scalar,flag)
+    rank_m=rank(echelon_form)
+    print("Rank of the matrix:", rank_m)
+    print("Determinant of the matrix:", det)
+    if det!=0:
+        print("Invert of the matrix:\n", inver)
+
+# Example usage:
+matrix = np.array([[1, 1,5],
+                   [0,3, 4],
+                   [8, 1, 7]])
+
+t=time()
+echelon_form,scalar,flag,inver=gaussian_elimination(matrix)
+det=determinant(echelon_form, scalar,flag)
+rank_m=rank(echelon_form)
+print("Rank of the matrix:", rank_m)
+print("Determinant of the matrix:", det)
+if det!=0:
+    print("Invert of the matrix:\n", inver)
+    
+print(time()-t)
+
+t=time()
+det=np.linalg.det(matrix)
+r=np.linalg.matrix_rank(matrix)
+if det!=0:
+    inv=np.linalg.inv(matrix)
+print("Rank of the matrix:",r)
+print("Determinant of the matrix:", det)
+if det!=0:
+    print("Invert of the matrix:\n", inv)
+print(time()-t)
 
