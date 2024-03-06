@@ -26,13 +26,13 @@ def gaussian_elimination(m):
             # swap the rows
             inverted[row], inverted[pivot_row] = inverted[pivot_row], inverted[row]
             res[row], res[pivot_row] = res[pivot_row], res[row]
-            if pivot_row != row: 
-                flag *=-1
+
             # divide the rows elements with the first nonzero element 
             scalar /=res[row][col]
             inverted[row] /= res[row][col]
             res[row] /= res[row][col]
-            
+            if pivot_row != row: 
+                flag *=-1
             
             # Reset all other elements in the current column
             for r in range(n):
@@ -170,8 +170,10 @@ t=time()
 pymethods(matrix)
 print("TIME:",time()-t)
 
-print("3.rank_matrix(1000x1000).txt")      
-matrix= np.loadtxt('rank_matrix(1000x1000).txt', usecols=range(1000))
+print("3.rank_matrix(1000x1000).txt")
+matrix = np.loadtxt('rank_matrix(1000x1000).txt', delimiter=',', usecols=range(1000))
+
+
 t=time()
 matrix_method(matrix)
 print("TIME:",time()-t)
