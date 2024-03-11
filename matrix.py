@@ -91,7 +91,7 @@ def gaussian_elimination1(m):
         pivot_row = find_pivot_row(res, row, col)
         if pivot_row!=None :
             # swap the rows
-            if pivot_row !=row:
+            if pivot_row !=row :
                 inverted[row]+=res[pivot_row]
                 res[row]+=res[pivot_row]
             if row<n:
@@ -114,7 +114,7 @@ def gaussian_elimination1(m):
                 print(inverted[row+1:,:])
             # divide the rows elements with the first nonzero element 
             scalar /=res[row][col]
-            inverted[row+1:] /= res[row][col]
+            inverted[row] /= res[row][col]
             res[row] /= res[row][col]
             if pivot_row != row: 
                 flag *=-1
