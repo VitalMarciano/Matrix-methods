@@ -29,27 +29,43 @@ class Matrix:
         row, col = 0, 0
         n = self.matrix.shape[0]
         res = np.copy(self.matrix).astype(float)
-        flag = 1
-        scalar = 1.0
-        inverted = np.identity(n)
+        flag=1
+        scalar=1.0
+        inverted= np.identity(n)
         while row < n and col < n:
             pivot_row = self.find_pivot_row(res, row, col)
-            if pivot_row is not None:
-                inverted[row], inverted[pivot_row] = inverted[pivot_row], inverted[row]
-                res[row], res[pivot_row] = res[pivot_row], res[row]
-                scalar /= res[row][col]
+            if pivot_row!=None :
+                # swap the rows
+                if pivot_row !=row :
+                    inverted[row]+=res[pivot_row]
+                    res[row]+=res[pivot_row]
+                    
+                vec_col=res[row+1:,col].reshape(-1,1)
+                vec_col=vec_col/res[row,col]
+                vec_row=res[row].reshape(1,-1)
+                mat_multiply=vec_row*vec_col
+                inverted[row+1:,:]-=mat_multiply
+                res[row+1:,:]-=mat_multiply
+    
+                # divide the rows elements with the first nonzero element 
+                scalar /=res[row][col]
                 inverted[row] /= res[row][col]
                 res[row] /= res[row][col]
-                if pivot_row != row:
-                    flag *= -1
-                for r in range(n):
-                    if r != pivot_row:
-                        factor = res[r, col]
-                        inverted[r] -= factor * inverted[pivot_row]
-                        res[r] -= factor * res[pivot_row]
-                row += 1
-            col += 1
-        return res, scalar, flag, inverted
+                if pivot_row != row: 
+                    flag *=-1
+    
+                # Reset all other elements in the current column
+                # for r in range(n):
+                #       if r!= pivot_row:
+                #           factor = res[r, col]
+                #           inverted[r] -= factor * inverted[pivot_row]
+                #           res[r] -= factor * res[pivot_row]
+                        
+                row+=1
+            col+=1
+          
+            
+        return (res,scalar,flag,inverted)  
 
     def find_pivot_row(self, matrix, start_row, col):
         """
