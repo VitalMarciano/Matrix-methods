@@ -1,6 +1,5 @@
 #lang racket
 
-
 ;; Function to extract an element from a matrix given row i and column j
 (define (extract matrix i j)
   "Extracts the element at row i and column j from the matrix."
@@ -12,14 +11,6 @@
   (let ((tmp (vector-ref matrix i)))
     (vector-set! matrix i (vector-ref matrix j))
     (vector-set! matrix j tmp)))
-
-;; Function to create an identity matrix of size n x n
-(define (make-identity-matrix n)
-  (let ((identity (make-vector n)))
-    (do ((i 0 (+ i 1)))
-        ((= i n) identity)
-      (vector-set! identity i (make-vector n))
-      (vector-set! (vector-ref identity i) i 1))))
 
 ;; Function to scale a row in a matrix by a given factor
 (define (scale-row! matrix i factor)
@@ -42,34 +33,21 @@
   (eliminate-row! matrix (add1 i) j pivot))
 
 ;; Function to compute the rank of a matrix using Gaussian elimination
-(define (gaussian-rank matrix identity-matrix (i 0) (j 0) (rank 0))
+(define (gaussian-rank matrix (i 0) (j 0) (rank 0))
   "Computes the rank of the matrix using Gaussian elimination."
   (cond ((>= i (vector-length matrix)) rank)
-        ((zero? (extract matrix i j)) (gaussian-rank matrix identity-matrix (+ 1 i) j rank))
+        ((zero? (extract matrix i j)) (gaussian-rank matrix (add1 i) j rank))
         (else
-          (swap-rows! identity-matrix i rank)
           (swap-rows! matrix i rank)
-          
           (let ((pivot (extract matrix rank j)))
-            
             (when (not (zero? pivot))
-              
-              (scale-row! identity-matrix rank (/ 1 pivot))
               (scale-row! matrix rank (/ 1 pivot))
-              (eliminate-rows! identity-matrix rank j pivot)
               (eliminate-rows! matrix rank j pivot))
-            (gaussian-rank matrix identity-matrix (+ 1 i) (+ 1 j) (+ 1 rank))))))
+            (gaussian-rank matrix (add1 i) (add1 j) (add1 rank))))))
 
 ;; Example matrix
-(define mat (vector #(1 2 3) #(4 5 6) #(7 2 9)))
-(define identity-mat (make-identity-matrix 3))
-(display "\n")
-(display identity-mat)
-(display "\n")
+(define mat (vector #(1 2 3) #(0 1 2) #(0 0 1)))
+
 ;; Compute the rank of the matrix
 (display "Rank of the matrix: ")
-(display (gaussian-rank mat identity-mat)) ;;=> 1
-(display "\n")
-(display mat)
-(display "\n")
-(display identity-mat)
+(display (gaussian-rank mat)) ;;=> 1
