@@ -46,6 +46,29 @@ def gaussian_elimination(m):
       
         
     return (res,scalar,flag,inverted)   
+
+
+def find_pivot_row(matrix, start_row, col):
+    """
+    Function to find the pivot row in a given column of the matrix.
+
+    Parameters:
+    matrix (numpy.ndarray): Input matrix of shape (m, n).
+    start_row (int): Starting row index for search.
+    col (int): Column index for pivot search.
+
+    Returns:
+    int: Index of the pivot row, or None if no pivot is found.
+    """
+    num_rows = matrix.shape[0]
+    for row in range(start_row, num_rows):
+        if matrix[row, col] != 0:
+            return row
+    return None 
+    
+    
+
+
 def gaussian_elimination1(m):
     """
     Function to preform the gaussian elimination of a matrix.
@@ -80,56 +103,34 @@ def gaussian_elimination1(m):
                 vec_row=res[row].reshape(1,-1)
                 print("vec_row")
                 print(vec_row)
-                mat_multiply=vec_col*vec_row
+                mat_multiply=vec_row*vec_col
                 print("mat_multiply")
                 print(mat_multiply)
                 print("res[row+1:,:]")
                 print(res[row+1:,:])
                 inverted[row+1:,:]-=mat_multiply
                 res[row+1:,:]-=mat_multiply
-                
+                print("inverted[row+1:,:]-=mat_multiply")
+                print(inverted[row+1:,:])
             # divide the rows elements with the first nonzero element 
             scalar /=res[row][col]
-            # inverted[row] /= res[row][col]
-            # res[row] /= res[row][col]
+            inverted[row+1:] /= res[row][col]
+            res[row] /= res[row][col]
             if pivot_row != row: 
                 flag *=-1
             
             # Reset all other elements in the current column
-            #for r in range(n):
-                #if r!= pivot_row:
-                    #factor = res[r, col]
-                    #inverted[r] -= factor * inverted[pivot_row]
-                   # res[r] -= factor * res[pivot_row]
+            # for r in range(n):
+            #     if r!= pivot_row:
+            #         factor = res[r, col]
+            #         inverted[r] -= factor * inverted[pivot_row]
+            #         res[r] -= factor * res[pivot_row]
                     
             row+=1
         col+=1
       
         
     return (res,scalar,flag,inverted)  
-
-def find_pivot_row(matrix, start_row, col):
-    """
-    Function to find the pivot row in a given column of the matrix.
-
-    Parameters:
-    matrix (numpy.ndarray): Input matrix of shape (m, n).
-    start_row (int): Starting row index for search.
-    col (int): Column index for pivot search.
-
-    Returns:
-    int: Index of the pivot row, or None if no pivot is found.
-    """
-    num_rows = matrix.shape[0]
-    for row in range(start_row, num_rows):
-        if matrix[row, col] != 0:
-            return row
-    return None 
-    
-    
-
-
-
     
 def determinant(m,scalar,flag):
     
