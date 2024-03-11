@@ -7,6 +7,7 @@ The Matrix class encapsulates matrix operations including Gaussian elimination, 
 """
 
 import numpy as np
+from time import time
 
 class Matrix:
     def __init__(self, matrix):
@@ -40,12 +41,19 @@ class Matrix:
                     inverted[row]+=res[pivot_row]
                     res[row]+=res[pivot_row]
                     
-                vec_col=res[row+1:,col].reshape(-1,1)
+                vec_col=np.copy(res[:,col].reshape(-1,1))
+                vec_col[row][0]=0
+                # The col is the same as the res matrix
+                i_vec_col=np.copy(vec_col)
                 vec_col=vec_col/res[row,col]
+                i_vec_col=i_vec_col/res[row,col]
                 vec_row=res[row].reshape(1,-1)
+                # row as the identity matrix
+                i_vec_row=inverted[row].reshape(1,-1)
+                i_mat_multiply= i_vec_col * i_vec_row
                 mat_multiply=vec_row*vec_col
-                inverted[row+1:,:]-=mat_multiply
-                res[row+1:,:]-=mat_multiply
+                inverted-=i_mat_multiply
+                res-=mat_multiply
     
                 # divide the rows elements with the first nonzero element 
                 scalar /=res[row][col]
@@ -55,7 +63,7 @@ class Matrix:
                     flag *=-1
     
                 # Reset all other elements in the current column
-                # for r in range(n):
+                # for r in  [ 0.       range(n):
                 #       if r!= pivot_row:
                 #           factor = res[r, col]
                 #           inverted[r] -= factor * inverted[pivot_row]
@@ -64,7 +72,7 @@ class Matrix:
                 row+=1
             col+=1
           
-            
+        print(res)
         return (res,scalar,flag,inverted)  
 
     def find_pivot_row(self, matrix, start_row, col):
@@ -128,13 +136,19 @@ class Matrix:
         Returns:
         Inverse of the input matrix.
         """
-        if self.determinant() != 0:
-            return self.invereted_matrix
-        return None
-matrix=Matrix( np.array([[1, 2, 3],
-                   [4, 5, 6],[7,2,9]]))
-print(matrix.rank()) 
-print(matrix.determinant()) 
-print(matrix.inverse_matrix()) 
+        #if self.determinant() != 0:
+        return self.invereted_matrix
+        #return None
+#matrix=Matrix( np.array([[1, 2, 3],[4, 5, 6],[7,2,9]]))
+matrix=np.loadtxt('det_matrix(800 x 800).txt', usecols=range(800))
+t=time()
+matrix= Matrix(matrix)
+# print(matrix.rank()) 
+# print(matrix.determinant()) 
+print(matrix.inverse_matrix())
+print("TIME:",time()-t) 
 
-#matrix= np.loadtxt('det_matrix(800 x 800).txt', usecols=range(800))
+print("python")
+t=time()
+print(np.linalg.inv(matrix.matrix))
+print("TIME:",time()-t) 
