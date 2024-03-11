@@ -46,67 +46,7 @@ def gaussian_elimination(m):
       
         
     return (res,scalar,flag,inverted)   
-def gaussian_elimination1(m):
-    """
-    Function to preform the gaussian elimination of a matrix.
 
-    Parameters:
-    Input matrix m of shape (n, n).
-
-    Returns:
-    Gaussian elimination of the input matrix.
-    
-    """
-    row, col = 0, 0
-    n = m.shape[0]
-    res = np.copy(m).astype(float)
-    flag=1
-    scalar=1.0
-    inverted= np.identity(n)
-    while row < n and col < n:
-        print("row:",row)
-        pivot_row = find_pivot_row(res, row, col)
-        if pivot_row!=None :
-            # swap the rows
-            if pivot_row !=row:
-                inverted[row]+=res[pivot_row]
-                res[row]+=res[pivot_row]
-            if row<n:
-                vec_col=res[row+1:,col].reshape(-1,1)
-                print("vec_col")
-                print(vec_col)
-              #  vec_col=vec_col[row:]
-                vec_col/=res[row,col]
-                vec_row=res[row].reshape(1,-1)
-                print("vec_row")
-                print(vec_row)
-                mat_multiply=vec_col*vec_row
-                print("mat_multiply")
-                print(mat_multiply)
-                print("res[row+1:,:]")
-                print(res[row+1:,:])
-                inverted[row+1:,:]-=mat_multiply
-                res[row+1:,:]-=mat_multiply
-                
-            # divide the rows elements with the first nonzero element 
-            scalar /=res[row][col]
-            # inverted[row] /= res[row][col]
-            # res[row] /= res[row][col]
-            if pivot_row != row: 
-                flag *=-1
-            
-            # Reset all other elements in the current column
-            #for r in range(n):
-                #if r!= pivot_row:
-                    #factor = res[r, col]
-                    #inverted[r] -= factor * inverted[pivot_row]
-                   # res[r] -= factor * res[pivot_row]
-                    
-            row+=1
-        col+=1
-      
-        
-    return (res,scalar,flag,inverted)  
 
 def find_pivot_row(matrix, start_row, col):
     """
@@ -129,7 +69,68 @@ def find_pivot_row(matrix, start_row, col):
     
 
 
+def gaussian_elimination1(m):
+    """
+    Function to preform the gaussian elimination of a matrix.
 
+    Parameters:
+    Input matrix m of shape (n, n).
+
+    Returns:
+    Gaussian elimination of the input matrix.
+    
+    """
+    row, col = 0, 0
+    n = m.shape[0]
+    res = np.copy(m).astype(float)
+    flag=1
+    scalar=1.0
+    inverted= np.identity(n)
+    while row < n and col < n:
+        print("row:",row)
+        pivot_row = find_pivot_row(res, row, col)
+        if pivot_row!=None :
+            # swap the rows
+            if pivot_row !=row :
+                inverted[row]+=res[pivot_row]
+                res[row]+=res[pivot_row]
+            if row<n:
+                vec_col=res[row+1:,col].reshape(-1,1)
+                print("vec_col")
+                print(vec_col)
+              #  vec_col=vec_col[row:]
+                vec_col/=res[row,col]
+                vec_row=res[row].reshape(1,-1)
+                print("vec_row")
+                print(vec_row)
+                mat_multiply=vec_row*vec_col
+                print("mat_multiply")
+                print(mat_multiply)
+                print("res[row+1:,:]")
+                print(res[row+1:,:])
+                inverted[row+1:,:]-=mat_multiply
+                res[row+1:,:]-=mat_multiply
+                print("inverted[row+1:,:]-=mat_multiply")
+                print(inverted[row+1:,:])
+            # divide the rows elements with the first nonzero element 
+            scalar /=res[row][col]
+            inverted[row] /= res[row][col]
+            res[row] /= res[row][col]
+            if pivot_row != row: 
+                flag *=-1
+            
+            # Reset all other elements in the current column
+            # for r in range(n):
+            #     if r!= pivot_row:
+            #         factor = res[r, col]
+            #         inverted[r] -= factor * inverted[pivot_row]
+            #         res[r] -= factor * res[pivot_row]
+                    
+            row+=1
+        col+=1
+      
+        
+    return (res,scalar,flag,inverted)  
     
 def determinant(m,scalar,flag):
     
