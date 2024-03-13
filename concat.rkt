@@ -67,11 +67,11 @@
                                              ;add a function that substruct and do the multi matrix
                                              ;call her here
                               ;not working
-                              ;   (let*
-                              ;   (coli (./ (sub mat 0 j n 1) (ref mat i j)))
-                              ;   (rowi (sub mat i 0 1 n))
-                              ;   (multi-mat (outer coli rowi))
-                              ;     )
+                                 (let*
+                                 ((coli (./ (sub mat 0 j n 1) (ref mat i j)))
+                                 (rowi (sub mat i 0 1 n)))
+                                   (outer coli rowi)
+                                   )
                                         ; no pivot col+=1
                                         ;((= pivot -1 ) (gaussian-elimination mat i (+ j 1) n) )
                                         
@@ -91,7 +91,9 @@
 (define c (transpose(matrix '[0 44 78])))
 (define v (matrix '[0 44 78]))
 (define x (gaussian-elimination A 0 0 3))
+(display "\ngaussian-elimination\n")
 (display x)
+(display "\n")
 (define d (determinente A 1 -1 0 3))
 (display d)
 
