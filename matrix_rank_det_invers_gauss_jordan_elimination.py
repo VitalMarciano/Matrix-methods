@@ -18,7 +18,7 @@ class Matrix:
         matrix (numpy.ndarray): Input matrix of shape (n, n).
         """
         self.matrix = matrix
-        self.echelon_form, self.scalar, self.flag, self.invereted_matrix = self.gaussian_elimination()
+        self.echelon_form, self.scalar, self.invereted_matrix = self.gaussian_elimination()
 
     def gaussian_elimination(self):
         """
@@ -30,7 +30,6 @@ class Matrix:
         row, col = 0, 0
         n = self.matrix.shape[0]
         res = np.copy(self.matrix).astype(float)
-        flag=1
         scalar=1.0
         inverted= np.identity(n)
         while row < n and col < n:
@@ -59,8 +58,7 @@ class Matrix:
                 scalar /=res[row][col]
                 inverted[row] /= res[row][col]
                 res[row] /= res[row][col]
-                if pivot_row != row: 
-                    flag *=-1
+               
     
                 # Reset all other elements in the current column
                 # for r in  [ 0.       range(n):
@@ -73,7 +71,7 @@ class Matrix:
             col+=1
           
         print(res)
-        return (res,scalar,flag,inverted)  
+        return (res,scalar,inverted)  
 
     def find_pivot_row(self, matrix, start_row, col):
         """
@@ -104,7 +102,6 @@ class Matrix:
             if det == 0:
                 return det
         if det != 0:
-            det *= self.flag
             det /= self.scalar
         return det
 
@@ -139,12 +136,12 @@ class Matrix:
         #if self.determinant() != 0:
         return self.invereted_matrix
         #return None
-#matrix=Matrix( np.array([[1, 2, 3],[4, 5, 6],[7,2,9]]))
-matrix=np.loadtxt('det_matrix(800 x 800).txt', usecols=range(800))
+matrix=Matrix( np.array([[1, 2, 3],[4, 5, 6],[7,2,9]]))
+#matrix=np.loadtxt('det_matrix(800 x 800).txt', usecols=range(800))
 t=time()
 matrix= Matrix(matrix)
 # print(matrix.rank()) 
-# print(matrix.determinant()) 
+print(matrix.determinant()) 
 print(matrix.inverse_matrix())
 print("TIME:",time()-t) 
 
