@@ -28,7 +28,7 @@ class Matrix:
         Gaussian elimination of the input matrix.
         """
         row, col = 0, 0
-        n = self.matrix.shape[0]
+        n = (self.matrix).shape[0]
         res = np.copy(self.matrix).astype(float)
         scalar=1.0
         inverted= np.identity(n)
@@ -80,7 +80,7 @@ class Matrix:
         Returns:
         Index of the pivot row, or None if no pivot is found.
         """
-        num_rows = matrix.shape[0]
+        num_rows = (self.matrix).shape[0]
         for row in range(start_row, num_rows):
             if matrix[row, col] != 0:
                 return row
@@ -136,10 +136,10 @@ class Matrix:
         #if self.determinant() != 0:
         return self.invereted_matrix
         #return None
-matrix=Matrix( np.array([[1, 2, 3],[4, 5, 6],[7,2,9]]))
+matrix=Matrix( np.array([[0, 0, 3],[1,11, 22],[0,44,22]]))
 #matrix=np.loadtxt('det_matrix(800 x 800).txt', usecols=range(800))
 t=time()
-matrix= Matrix(matrix)
+#matrix= Matrix(matrix)
 # print(matrix.rank()) 
 print(matrix.determinant()) 
 print(matrix.inverse_matrix())

@@ -1,14 +1,7 @@
 #lang racket
 (require flomat)
 
-(define swap-rows(λ(mat rowi pivot-row n)
-                       
-                    (let((tmp1 (sub mat rowi 0 1 n)) (tmp2 (sub mat pivot-row 0 1 n)))
-                         (begin
-                         (insert-row mat rowi tmp2 n)
-                         (insert-row mat pivot-row tmp1 n)
-                         )
-                     )))
+
 
 (define A (matrix '((0 0 3) (1 11 22)(0 44 22))))
 (for/list ([   x  (in-row A 0)]) x)
@@ -32,15 +25,17 @@
                      (augment  sub-top (augment  coli sub-buttom))))
                   )))
 
-" get mat, i (row index), j (col index) and n
- return row i * (col j)/ matrix[i][j]"
+
 (define eliminate (λ(mat i j pivot n)
+                    " get mat, i (row index), j (col index) and n
+                      return row i * (col j)/ matrix[i][j]"
                 (let*                    
                     (
                      (coli (mset! ( ./ (sub mat 0 j n 1) pivot ) i 0 0))     
                      (rowi (sub mat i 0 1 n))
                      (mult-mat (outer coli rowi))
                      (res-mat (.- mat mult-mat))
+                  
                      )
                   
                     (insert-row res-mat i (./ rowi pivot) n))
@@ -48,34 +43,42 @@
 
 
 (define find-pivot(λ (mat start-row coli n)
-                    (cond 
-                          ((= start-row n) -1)
-                          ((not (= (ref mat start-row coli) 0))
+                    (cond
+
+                      ((= start-row n) -1)
+                      ((not (= (ref mat start-row coli) 0))
                           start-row)
                      (else (find-pivot mat (+ start-row 1) coli n)))))
 
-(define gaussian-elimination (λ (mat i j n)
-          ;1.stop recurstion
-          ;(or (= i n) (= j n) (mat))
-          ;2. no pivot col+=1
-          ; ((= pivot -1 ) (gaussian-elimination mat i (+ j 1) n) )
-          ;3.  row+=1 (defualt after all the operations sends with the new martix )
-          ; ((= pivot -1 ) (gaussian-elimination mat (+ i 1) j n) )
-
+(define gaussian-elimination (λ (mat invers i j n)
+          "1.stop recurstion
+          (or (= i n) (= j n) (mat))
+          2. no pivot col+=1
+           ((= pivot -1 ) (gaussian-elimination mat i (+ j 1) n) )
+          3.  row+=1 (defualt after all the operations sends with the new martix )
+           ((= pivot -1 ) (gaussian-elimination mat (+ i 1) (+ j 1) n) )"
                                ;stop recurstion
-                               (or (= i n) (= j n) mat)
-                       
-                               (begin
-                                       (define pivot (find-pivot mat i j n))
-                                       (if (positive? pivot)
-                                       ; pivot != row aka i: sum res[row]+=res[pivot_row]
-                                           (begin
-                                             (if(not(= i pivot))
-                                                (gaussian-elimination (eliminate (insert-row mat i (.+ (sub mat i 0 1 n)(sub mat pivot 0 1 n)) n) i j (ref mat i j) n) (+ i 1) (+ j 1) n)
-                                                (gaussian-elimination (eliminate mat i j (ref mat i j) n) (+ i 1) (+ j 1) n))
-                                   
+                                 (if (or (= i n) (= j n)) invers
+                                  (let* ((pivot (find-pivot mat i j n)))
+                                    ; pivot != row aka i: sum res[row]+=res[pivot_row]
+                                    (cond
+                                      ((= pivot -1)
+                                        (gaussian-elimination mat invers i (+ j 1) n))
+                                      (( not (= i pivot))
+                                       (let* (
+                                              (ri (.+ (sub invers i 0 1 n)(sub mat pivot 0 1 n)))
+                                              (mi  (insert-row invers i ri n))
+                                              (r (.+ (sub mat i 0 1 n)(sub mat pivot 0 1 n)))
+                                              (m  (insert-row mat i r n))
+                                              (tm1i (eliminate mi i j (ref m i j) n))
+                                              (tm1 (eliminate m i j (ref m i j) n)))
+                                         (gaussian-elimination tm1 tm1i (+ i 1) (+ j 1) n)))
+                                      (else (let* ((tm2i (eliminate invers i j (ref mat i j) n))
+                                                   (tm2 (eliminate mat i j (ref mat i j) n)))
+                                              (gaussian-elimination tm2 tm2i (+ i 1) (+ j 1) n)))) ))))
                                        
-                                       )(gaussian-elimination A i (+ j 1) n)))))
+                                       
+
 (define determinente (λ(mat det a i n)
                        (if (= i n) (* det  a)
                        (determinente mat (* det (ref mat i i)) a (+ i 1) n))))
@@ -87,20 +90,18 @@
 
 
 (display A)
-(define c (transpose(matrix '[0 44 78])))
-(define v (matrix '[0 44 78]))
-(define x (gaussian-elimination A 0 0 3))
+(define I (eye 3 3))
+(define x (gaussian-elimination A I 0 0 3))
+
 (display "\ngaussian-elimination\n")
 (display x)
 (display "\n")
 (define d (determinente A 1 -1 0 3))
 (display d)
+(display (inv A)) 
 
-(define colA (sub A 0 0 3 1))
-(define rowA (sub A 0 0 1 3))
 
-(display "\n")
-(display (outer colA rowA))
+;read from a file  the matrix
 (define path "det_matrix(800 x 800).txt")
 (define delim #rx"([ ]*(,)[ ]*)|([ ]+)")
 
