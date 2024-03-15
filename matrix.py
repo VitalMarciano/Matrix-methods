@@ -83,43 +83,24 @@ def gaussian_elimination1(m):
     row, col = 0, 0
     n = m.shape[0]
     res = np.copy(m).astype(float)
-    flag=1
-    scalar=1.0
-    inverted= np.identity(n)
+
     while row < n and col < n:
         pivot_row = find_pivot_row(res, row, col)
         if pivot_row!=None :
             # swap the rows
             if pivot_row !=row :
-                inverted[row]+=res[pivot_row]
                 res[row]+=res[pivot_row]
                 
             vec_col=res[row+1:,col].reshape(-1,1)
             vec_col=vec_col/res[row,col]
             vec_row=res[row].reshape(1,-1)
             mat_multiply=vec_row*vec_col
-            inverted[row+1:,:]-=mat_multiply
+
             res[row+1:,:]-=mat_multiply
-
-            # divide the rows elements with the first nonzero element 
-            scalar /=res[row][col]
-            inverted[row] /= res[row][col]
-            res[row] /= res[row][col]
-            if pivot_row != row: 
-                flag *=-1
-
-            # Reset all other elements in the current column
-            # for r in range(n):
-            #       if r!= pivot_row:
-            #           factor = res[r, col]
-            #           inverted[r] -= factor * inverted[pivot_row]
-            #           res[r] -= factor * res[pivot_row]
-                    
             row+=1
         col+=1
-      
         
-    return (res,scalar,flag,inverted)  
+    return (res)  
 
 def lower_triangle2(A, B):
     n, m = np.shape(A)
@@ -135,7 +116,7 @@ def lower_triangle2(A, B):
                 B[i, j] = B[i, j] - s*B[k, j]
     return(A,B)
    
-def determinant(m,scalar,flag):
+def determinant(m):
     
     """
     Function to calculate the determinant of a matrix.
@@ -151,13 +132,7 @@ def determinant(m,scalar,flag):
     det=1
     for i in range(n):
         det *= m[i][i]
-        if det==0:
-            return det
-    if det!=0:
-        det*=flag
-        det/=scalar
-        #add the multiplcity of the scalar from the gaus elimination if needed 
-        pass 
+   
     return det 
         
 
@@ -189,8 +164,8 @@ def rank(m):
 
 def matrix_method(m):
     
-    echelon_form,scalar,flag,inver=gaussian_elimination1(m)
-    det=determinant(echelon_form, scalar,flag)
+    echelon_form=gaussian_elimination1(m)
+    det=determinant(echelon_form)
     rank_m=rank(echelon_form)
     # echelon_form,inver=lower_triangle2(echelon_form,inver)
     # for i in range(np.shape(echelon_form)[0]):
@@ -200,7 +175,7 @@ def matrix_method(m):
     print("Rank of the matrix:", rank_m)
     print("Determinant of the matrix:", det)
     if det!=0:
-        print("Invert of the matrix:\n", inver)
+ 
         print(echelon_form)
 
 # Example usage:
@@ -218,8 +193,8 @@ def pymethods(matrix):
 print("1.det_matrix(800 x 800).txt")       
 # matrix= np.loadtxt('det_matrix(800 x 800).txt', usecols=range(800))
 
-matrix= np.array([[1, 2, 3],
-                  [4, 5, 6],[7,2,9]]) 
+matrix= np.array([[0,0, 3],
+                  [1, 1,4],[0,2,4]]) 
 t=time()
 matrix_method(matrix)
 print("TIME:",time()-t)
