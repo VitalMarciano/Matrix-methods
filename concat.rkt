@@ -3,7 +3,7 @@
 
 
 
-(define A (matrix '((0 0 3) (1 11 22)(0 44 22))))
+(define A (matrix '((0 3) (2 11))))
 (for/list ([   x  (in-row A 0)]) x)
 
 
@@ -26,12 +26,12 @@
                   )))
 
 
-(define eliminate (λ(mat i j pivot n)
+(define eliminate (λ(mat i j col-mat pivot n)
                     " get mat, i (row index), j (col index) and n
                       return row i * (col j)/ matrix[i][j]"
                 (let*                    
                     (
-                     (coli (mset! ( ./ (sub mat 0 j n 1) pivot ) i 0 0))     
+                     (coli (mset! ( ./ col-mat pivot ) i 0 0))     
                      (rowi (sub mat i 0 1 n))
                      (mult-mat (outer coli rowi))
                      (res-mat (.- mat mult-mat))
@@ -66,15 +66,16 @@
                                         (gaussian-elimination mat invers i (+ j 1) n))
                                       (( not (= i pivot))
                                        (let* (
-                                              (ri (.+ (sub invers i 0 1 n)(sub mat pivot 0 1 n)))
+                                              (ri (.+ (sub invers i 0 1 n)(sub invers pivot 0 1 n)))
                                               (mi  (insert-row invers i ri n))
                                               (r (.+ (sub mat i 0 1 n)(sub mat pivot 0 1 n)))
                                               (m  (insert-row mat i r n))
-                                              (tm1i (eliminate mi i j (ref m i j) n))
-                                              (tm1 (eliminate m i j (ref m i j) n)))
+                                              (coli (sub m 0 j n 1))
+                                              (tm1i (eliminate mi i j coli (ref m i j) n))
+                                              (tm1 (eliminate m i j coli (ref m i j) n)))
                                          (gaussian-elimination tm1 tm1i (+ i 1) (+ j 1) n)))
-                                      (else (let* ((tm2i (eliminate invers i j (ref mat i j) n))
-                                                   (tm2 (eliminate mat i j (ref mat i j) n)))
+                                      (else (let* ((tm2i (eliminate invers i j (sub mat 0 j n 1) (ref mat i j) n))
+                                                   (tm2 (eliminate mat i j (sub mat 0 j n 1) (ref mat i j) n)))
                                               (gaussian-elimination tm2 tm2i (+ i 1) (+ j 1) n)))) ))))
                                        
                                        
@@ -90,14 +91,14 @@
 
 
 (display A)
-(define I (eye 3 3))
-(define x (gaussian-elimination A I 0 0 3))
+(define I (eye 2 2))
+(define x (gaussian-elimination A I 0 0 2))
 
 (display "\ngaussian-elimination\n")
 (display x)
 (display "\n")
-(define d (determinente A 1 -1 0 3))
-(display d)
+;(define d (determinente A 1 -1 0 3))
+;(display d)
 (display (inv A)) 
 
 
