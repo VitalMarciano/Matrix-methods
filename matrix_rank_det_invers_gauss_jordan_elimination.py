@@ -73,7 +73,7 @@ class Matrix:
             col+=1
            
           
-     
+        print(res)
         return (res,scalar,inverted)  
 
     def find_pivot_row(self, matrix, start_row, col):
@@ -139,7 +139,7 @@ class Matrix:
         #if self.determinant() != 0:
         return self.invereted_matrix
         #return None
-matrix=Matrix( np.array([[0, 0, 3],[1,11, 22],[0,44,22]]))
+matrix=Matrix( np.array([[0, 3],[1,11]]))
 #matrix=np.loadtxt('det_matrix(800 x 800).txt', usecols=range(800))
 t=time()
 #matrix= Matrix(matrix)
