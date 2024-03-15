@@ -33,22 +33,24 @@ class Matrix:
         scalar=1.0
         inverted= np.identity(n)
         while row < n and col < n:
+            
             pivot_row = self.find_pivot_row(res, row, col)
             if pivot_row!=None :
                 # swap the rows
                 if pivot_row !=row :
-                    inverted[row]+=res[pivot_row]
+                    inverted[row]+=inverted[pivot_row]
                     res[row]+=res[pivot_row]
-                    
+                     
                 vec_col=np.copy(res[:,col].reshape(-1,1))
                 vec_col[row][0]=0
+               
                 # The col is the same as the res matrix
                 i_vec_col=np.copy(vec_col)
                 vec_col=vec_col/res[row,col]
                 i_vec_col=i_vec_col/res[row,col]
-                vec_row=res[row].reshape(1,-1)
+                vec_row=np.copy(res[row]).reshape(1,-1)
                 # row as the identity matrix
-                i_vec_row=inverted[row].reshape(1,-1)
+                i_vec_row=np.copy(inverted[row]).reshape(1,-1)
                 i_mat_multiply= i_vec_col * i_vec_row
                 mat_multiply=vec_row*vec_col
                 inverted-=i_mat_multiply
@@ -69,8 +71,9 @@ class Matrix:
                         
                 row+=1
             col+=1
+           
           
-        print(res)
+     
         return (res,scalar,inverted)  
 
     def find_pivot_row(self, matrix, start_row, col):
