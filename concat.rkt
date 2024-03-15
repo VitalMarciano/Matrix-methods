@@ -98,7 +98,7 @@
                          ; Compute the determinant of a matrix using Gaussian elimination
                        (gaussian-elimination Mat 0 0 (nrows Mat) 0 1 1 )))
 
-(define rank (λ(Mat)
+(define rankM (λ(Mat)
                ; Compute the rank of a matrix using Gaussian elimination
            (gaussian-elimination Mat 0 0 (nrows Mat) 0 1 0)  ))
                
@@ -129,7 +129,7 @@
        mat)))
 (define m2 (matrix  (read_data path_rank delim)))
 (define t_start2 (current-inexact-milliseconds)) ;Get current time
-(define ra (rank  m2))
+(define ra (rankM  m2))
 (display "\n rank:  ")
 (display ra)
 (define t_end2 (current-inexact-milliseconds))
@@ -153,4 +153,27 @@
 (define t_end1 (current-inexact-milliseconds))
 (display "\n inverse time: ")
 (display (- t_end1 t_start1) )
+(display "\n SCHEME \n  ")
 
+(define t_startS (current-inexact-milliseconds)) ;Get current time
+(define ds (det  m))
+(display "\n det: ")
+(display ds)
+(define t_endS (current-inexact-milliseconds))
+(display "\n det time: ")
+(display (- t_endS t_startS) )
+
+(define t_start11 (current-inexact-milliseconds)) ;Get current time
+(define i1 (inv  m1))
+(display "\n inverse: ")
+(display i)
+(define t_end11 (current-inexact-milliseconds))
+(display "\n inverse time: ")
+(display (- t_end11 t_start11) )
+(define t_start2S (current-inexact-milliseconds)) ;Get current time
+(define ra1 (rank  m2))
+(display "\n rank:  ")
+(display ra1)
+(define t_end2S (current-inexact-milliseconds))
+(display "\n rank time: ")
+(display (- t_end2S t_start2S) )
