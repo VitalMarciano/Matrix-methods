@@ -52,7 +52,7 @@
                                     
                                     (cond
                                       ((= pivot -1) ; If pivot not found, move to the next column
-                                        (inverse-matrix-calculation Mat Inverted_mat i (+ j 1) n))
+                                        "Not inversable")
                                       (( not (= i pivot))
                                        (let* (
                                               (row_sum_i (.+ (sub Inverted_mat i 0 1 n)(sub Inverted_mat pivot 0 1 n)))
@@ -78,18 +78,19 @@
                                  (let* ((pivot (find-pivot Mat i j n)))
                                   (cond
                                       ((= pivot -1); If pivot not found, move to the next column
-                                        (gaussian-elimination Mat  i (+ j 1) n rank-count det flag))
+                                        (gaussian-elimination Mat  i (+ j 1) n rank-count 0 flag))
                                       (( not (= i pivot)) ; If current row is not pivot row
                                         (let* (
                                               (row-sum (.+ (sub Mat i 0 1 n)(sub Mat pivot 0 1 n)))
                                               (M  (insert-row Mat i row-sum n))
-                                              (M-elim (eliminate-rows m i j (ref M i j) n))
+                                              (M-elim (eliminate-rows M i j (ref M i j) n))
                                               )
-                                          (gaussian-elimination M-elim  (+ i 1)  (+ j 1) n (+ rank-count 1) (* det (ref M-elim i j) flag ))) )
+                                          (gaussian-elimination M-elim  (+ i 1)  (+ j 1) n (+ rank-count 1) (* det (ref M-elim i j)) flag )) )
                                       (else ; If current row is pivot row
                                        (let* (
                                                    (M (eliminate-rows Mat i j (ref Mat i j) n)))
                                               (gaussian-elimination M (+ i 1) (+ j 1) n (+ rank-count 1) (* det (ref M i j)) flag )))) ))))
+
 
 
 
@@ -104,7 +105,8 @@
 (define inverse-matrix (λ(Mat)
                            ; Compute the inverted of a matrix using Gaussian elimination
                         (inverse-matrix-calculation Mat (eye (nrows Mat)) 0 0 (nrows Mat))))
-
+(define A (matrix '((0 0 3) (0 11 22)(0 44 22))))
+(display (determinente A))
 ;read from a file  the matrix
 (define path_det "det_matrix(800 x 800).txt")
 (define path_inverse "inv_eig_matrix(800 x 800).txt")
