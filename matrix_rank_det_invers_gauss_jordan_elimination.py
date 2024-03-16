@@ -62,12 +62,10 @@ class Matrix:
                 # divide the rows elements with the first nonzero element 
                 inverted[row] /= res[row][col]
                 res[row] /= res[row][col]
-               
-                        
                 row+=1
+            else:
+                return "Not inversable"
             col+=1
-           
-    
         return inverted
   
     
@@ -98,7 +96,6 @@ class Matrix:
                 
                 row+=1
             col+=1
-        
         return res 
     
     
