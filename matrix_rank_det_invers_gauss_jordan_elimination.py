@@ -81,7 +81,10 @@ class Matrix:
         res = np.copy(self.matrix).astype(float)
         pivot_row=0
         while pivot_row < n and col < n:
-            pivot_row = self.find_pivot_row(res, row, col)
+            if self.matrix[row][col]==0:
+                pivot_row = self.find_pivot_row(res, row, col)
+            else: 
+                pivot_row=row
             if pivot_row!=None :
                 # swap the rows
                 self.rank+=1
@@ -99,7 +102,7 @@ class Matrix:
         return res 
     
     
-    def find_pivot_row(self, matrix, start_row, col):
+    def find_pivot_row(self,mat, start_row, col):
         """
         Function to find the pivot row in a given column of the matrix.
 
@@ -108,7 +111,7 @@ class Matrix:
         """
         num_rows = (self.matrix).shape[0]
         for row in range(start_row, num_rows):
-            if matrix[row, col] != 0:
+            if mat[row, col] != 0:
                 return row
         return None
 
