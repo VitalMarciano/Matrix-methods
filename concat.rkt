@@ -105,13 +105,16 @@
 (define inverse-matrix (λ(Mat)
                            ; Compute the inverted of a matrix using Gaussian elimination
                         (inverse-matrix-calculation Mat (eye (nrows Mat)) 0 0 (nrows Mat))))
-(define A (matrix '((0 0 3) (0 11 22)(0 44 22))))
-(display (determinente A))
+
 ;read from a file  the matrix
 (define path_det "det_matrix(800 x 800).txt")
 (define path_inverse "inv_eig_matrix(800 x 800).txt")
 (define path_rank "rank_matrix(1000x1000).txt")
 (define delim #rx"([ ]*(,)[ ]*)|([ ]+)")
+
+
+
+
 
 (define (next-line-it file)
   (let ((line (read-line file 'any)))
@@ -127,34 +130,11 @@
       (define mat (map (λ(x)(map string->number x)) numbers))
       (close-input-port file)
        mat)))
-(define m2 (matrix  (read_data path_rank delim)))
-(define t_start2 (current-inexact-milliseconds)) ;Get current time
-(define ra (rankM  m2))
-(display "\n rank:  ")
-(display ra)
-(define t_end2 (current-inexact-milliseconds))
-(display "\n rank time: ")
-(display (- t_end2 t_start2) )
-
 (define m (matrix  (read_data path_det delim)))
-(define t_start (current-inexact-milliseconds)) ;Get current time
-(define q (determinente  m))
-(display "\n det: ")
-(display q)
-(define t_end (current-inexact-milliseconds))
-(display "\n det time: ")
-(display (- t_end t_start) )
-
 (define m1 (matrix  (read_data path_inverse delim)))
-(define t_start1 (current-inexact-milliseconds)) ;Get current time
-(define i (inverse-matrix  m1))
-(display "\n inverse: ")
-(display i)
-(define t_end1 (current-inexact-milliseconds))
-(display "\n inverse time: ")
-(display (- t_end1 t_start1) )
-(display "\n SCHEME \n  ")
+(define m2 (matrix  (read_data path_rank delim)))
 
+(display "\n SCHEME \n  ")
 (define t_startS (current-inexact-milliseconds)) ;Get current time
 (define ds (det  m))
 (display "\n det: ")
@@ -166,7 +146,7 @@
 (define t_start11 (current-inexact-milliseconds)) ;Get current time
 (define i1 (inv  m1))
 (display "\n inverse: ")
-(display i)
+(display i1)
 (define t_end11 (current-inexact-milliseconds))
 (display "\n inverse time: ")
 (display (- t_end11 t_start11) )
@@ -177,3 +157,34 @@
 (define t_end2S (current-inexact-milliseconds))
 (display "\n rank time: ")
 (display (- t_end2S t_start2S) )
+
+
+
+
+
+
+(define t_start (current-inexact-milliseconds)) ;Get current time
+(define q (determinente  m))
+(display "\n det: ")
+(display q)
+(define t_end (current-inexact-milliseconds))
+(display "\n det time: ")
+(display (- t_end t_start) )
+
+
+(define t_start1 (current-inexact-milliseconds)) ;Get current time
+(define i (inverse-matrix  m1))
+(display "\n inverse: ")
+(display i)
+(define t_end1 (current-inexact-milliseconds))
+(display "\n inverse time: ")
+(display (- t_end1 t_start1) )
+
+(define t_start2 (current-inexact-milliseconds)) ;Get current time
+(define ra (rankM  m2))
+(display "\n rank:  ")
+(display ra)
+(define t_end2 (current-inexact-milliseconds))
+(display "\n rank time: ")
+(display (- t_end2 t_start2) )
+
