@@ -167,10 +167,10 @@ print("\ninv_eig_matrix(800 x 800).txt")
 matrix= np.loadtxt('inv_eig_matrix(800 x 800).txt', usecols=range(800))
 matrix= Matrix(matrix)
 t=time()
+inverse=matrix.inverse_matrix()
 print(matrix.inverse_matrix())
 print("TIME:",time()-t) 
-
-print("python")
+res= matrix.matrix @ inverse
 t=time()
 print(np.linalg.inv(matrix.matrix))
 print("TIME:",time()-t) 

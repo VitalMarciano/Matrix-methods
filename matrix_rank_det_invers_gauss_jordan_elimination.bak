@@ -64,7 +64,7 @@
                                               (M (eliminate M_tmp i j V-col (ref M_tmp i j) n)))
                                          (inverse-matrix-calculation M M_inv (+ i 1) (+ j 1) n)))
                                       (else ; If current row is pivot row
-                                       (let ((M_inv (eliminate Inverted_mat i j (sub Mat 0 j n 1) (ref Mat i j) n))
+                                       (let* ((M_inv (eliminate Inverted_mat i j (sub Mat 0 j n 1) (ref Mat i j) n))
                                                    (M (eliminate Mat i j (sub Mat 0 j n 1) (ref Mat i j) n)))
                                               (inverse-matrix-calculation M M_inv (+ i 1) (+ j 1) n)))) ))))
                                        
@@ -87,7 +87,7 @@
                                               )
                                           (gaussian-elimination M-elim  (+ i 1)  (+ j 1) n (+ rank-count 1) (* det (ref M-elim i j)) flag )) )
                                       (else ; If current row is pivot row
-                                       (let (
+                                       (let* (
                                                    (M (eliminate-rows Mat i j (ref Mat i j) n)))
                                               (gaussian-elimination M (+ i 1) (+ j 1) n (+ rank-count 1) (* det (ref M i j)) flag )))) ))))
 
@@ -161,7 +161,7 @@
 
 
 
-(display "\n \n OUR METHODS \n  ")
+
 
 (define t_start (current-inexact-milliseconds)) ;Get current time
 (define q (determinente  m))
